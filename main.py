@@ -1,7 +1,18 @@
 import pygame
+import os
 
 WIDTH = 800
 HEIGHT = 600
+
+_image_library = {}
+def get_image(path):
+        global _image_library
+        image = _image_library.get(path)
+        if image == None:
+                canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
+                image = pygame.image.load(canonicalized_path)
+                _image_library[path] = image
+        return image
 
 pygame.init()
 
@@ -9,10 +20,13 @@ Surface = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Bouncer")
 clock = pygame.time.Clock()
 
+pygame.mixer.music.load('music/song.wav')
+pygame.mixer.music.play(0)
+
 done = False
 is_green = True
-x = 30
-y = 30
+x = WIDTH/2
+y = HEIGHT/2
 
 while not done:
 
@@ -20,16 +34,7 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
 
-    Surface.fill((0, 0, 0))
-
-    if is_green:
-        color = (0, 255, 0)
-    else:
-        color = (255, 0, 0)
-    
-    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-        is_green = not is_green
-
+    Surface.fill((255, 255, 255))
 
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_UP]: y -= 3
@@ -37,7 +42,7 @@ while not done:
     if pressed[pygame.K_LEFT]: x -= 3
     if pressed[pygame.K_RIGHT]: x += 3
 
-    pygame.draw.rect(Surface, color, pygame.Rect(x, y, 60, 60))
+    Surface.blit(get_image('imgs/player.png'), (x, y))
 
     pygame.display.update()
     clock.tick(30)
