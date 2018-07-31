@@ -5,6 +5,11 @@ pygame.init()
 
 WIDTH = 512
 HEIGHT = 512
+Surface = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Gridrunner")
+clock = pygame.time.Clock()
+x = WIDTH/2
+y = HEIGHT/2
 
 # Controls spritesheet importing
 class spritesheet(object):
@@ -23,26 +28,21 @@ class spritesheet(object):
         image = pygame.transform.scale(image, (64, 64))
         return image
 
-def createLevel(level):
-
-Surface = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Bouncer")
-
-clock = pygame.time.Clock()
+# def createLevel(level):
 
 ss = spritesheet('spritesheet.png')
 air = ss.image_at((0, 0, 1, 1), colorkey=(0, 0, 0))
-coin = ss.image_at((8, 0, 4, 4), colorkey=(0, 0, 0))
-enemy = ss.image_at((12, 4, 4, 4), colorkey=(0, 0, 0))
 wall = ss.image_at((12, 0, 4, 4))
-doorOpen = ss.image_at((0, 0, 4, 4), colorkey=(0, 0, 0))
-doorClosed = ss.image_at((4, 0, 4, 4), colorkey=(0, 0, 0))
+player = ss.image_at((8, 4, 4, 4))
+enemy = ss.image_at((12, 4, 4, 4), colorkey=(0, 0, 0))
+coin = ss.image_at((8, 0, 4, 4), colorkey=(0, 0, 0))
 buttonClicked = ss.image_at((4, 4, 4, 4), colorkey=(0, 0, 0))
 buttonUnclicked = ss.image_at((0, 4, 4, 4), colorkey=(0, 0, 0))
-player = ss.image_at((8, 4, 4, 4))
+doorOpen = ss.image_at((0, 0, 4, 4), colorkey=(0, 0, 0))
+doorClosed = ss.image_at((4, 0, 4, 4), colorkey=(0, 0, 0))
 
-# Air = 0   Wall = 1   Player = 2   Exit = 3
-# Enemy = 4   Coin = 5   Door = 6   Button = 7
+# Air = 0   Wall = 1   Player = 2   Enemy = 3
+# Coin = 4   Button = 5   Open Door = 6   Closed Door = 7
 
 # This list is the layout for the level (8x8 grid)
 level = [
@@ -56,16 +56,11 @@ level = [
  [1, 1, 1, 1, 1, 1, 1, 1 ]
 ]
 
-createLevel(level)
-
-done = False
-x = WIDTH/2
-y = HEIGHT/2
-
-while not done:
+isPlaying = True
+while isPlaying:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            done = True
+            isPlaying = False
 
     Surface.fill((255, 255, 255))
     
@@ -75,7 +70,7 @@ while not done:
     if pressed[pygame.K_LEFT]: x -= 3
     if pressed[pygame.K_RIGHT]: x += 3
 
-    Surface.blit(coin, (x, y))
+    Surface.blit(player, (x, y))
 
     pygame.display.update()
     clock.tick(30)
