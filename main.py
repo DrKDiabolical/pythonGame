@@ -3,14 +3,13 @@ import os
 
 pygame.init()
 
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 512
+HEIGHT = 512
 
 # Controls spritesheet importing
 class spritesheet(object):
     def __init__(self, filename):
         self.sheet = pygame.image.load(filename).convert()
-    # Load a specific image from a specific rectangle
     def image_at(self, rectangle, colorkey = None):
         "Loads image from x,y,x+offset,y+offset"
         rect = pygame.Rect(rectangle)
@@ -20,17 +19,11 @@ class spritesheet(object):
             if colorkey is -1:
                 colorkey = image.get_at((0,0))
             image.set_colorkey(colorkey, pygame.RLEACCEL)
+        # Scales the image to 64x64s
+        image = pygame.transform.scale(image, (64, 64))
         return image
-    # Load a whole bunch of images and return them as a list
-    def images_at(self, rects, colorkey = None):
-        "Loads multiple images, supply a list of coordinates" 
-        return [self.image_at(rect, colorkey) for rect in rects]
-    # Load a whole strip of images
-    def load_strip(self, rect, image_count, colorkey = None):
-        "Loads a strip of images and returns them as a list"
-        tups = [(rect[0]+rect[2]*x, rect[1], rect[2], rect[3])
-                for x in range(image_count)]
-        return self.images_at(tups, colorkey)
+
+def createLevel(level):
 
 Surface = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Bouncer")
@@ -38,28 +31,51 @@ pygame.display.set_caption("Bouncer")
 clock = pygame.time.Clock()
 
 ss = spritesheet('spritesheet.png')
+air = ss.image_at((0, 0, 1, 1), colorkey=(0, 0, 0))
+coin = ss.image_at((8, 0, 4, 4), colorkey=(0, 0, 0))
+enemy = ss.image_at((12, 4, 4, 4), colorkey=(0, 0, 0))
+wall = ss.image_at((12, 0, 4, 4))
+doorOpen = ss.image_at((0, 0, 4, 4), colorkey=(0, 0, 0))
+doorClosed = ss.image_at((4, 0, 4, 4), colorkey=(0, 0, 0))
+buttonClicked = ss.image_at((4, 4, 4, 4), colorkey=(0, 0, 0))
+buttonUnclicked = ss.image_at((0, 4, 4, 4), colorkey=(0, 0, 0))
 player = ss.image_at((8, 4, 4, 4))
-player = pygame.transform.scale(player, (64, 64))
+
+# Air = 0   Wall = 1   Player = 2   Exit = 3
+# Enemy = 4   Coin = 5   Door = 6   Button = 7
+
+# This list is the layout for the level (8x8 grid)
+level = [
+ [1, 1, 1, 1, 1, 1, 1, 1 ],
+ [1, 0, 0, 0, 0, 0, 3, 1 ],
+ [1, 0, 0, 1, 1, 1, 1, 1 ],
+ [1, 0, 0, 0, 0, 0, 0, 1 ],
+ [1, 1, 1, 1, 1, 1, 0, 1 ],
+ [1, 0, 0, 0, 0, 0, 0, 1 ],
+ [1, 2, 0, 0, 0, 0, 0, 1 ],
+ [1, 1, 1, 1, 1, 1, 1, 1 ]
+]
+
+createLevel(level)
 
 done = False
 x = WIDTH/2
 y = HEIGHT/2
 
 while not done:
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
 
     Surface.fill((255, 255, 255))
-
+    
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_UP]: y -= 3
     if pressed[pygame.K_DOWN]: y += 3
     if pressed[pygame.K_LEFT]: x -= 3
     if pressed[pygame.K_RIGHT]: x += 3
 
-    Surface.blit(player, (x, y))
+    Surface.blit(coin, (x, y))
 
     pygame.display.update()
     clock.tick(30)
