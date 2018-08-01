@@ -30,7 +30,6 @@ level = [
 
 # Controls spritesheet importing
 def spritesheet(sheet, rectangle, scaleTo):
-    "Loads image from x,y,x+offset,y+offset"
     rect = pygame.Rect(rectangle)
     image = pygame.Surface(rect.size).convert()
     image.blit(sheet, (0, 0), rect)
@@ -41,10 +40,17 @@ def spritesheet(sheet, rectangle, scaleTo):
 
 # Generates a level based on the level list
 def createLevel(level):
-    loc = 0
-    for y in level:
-        Surface.blit(enemy, (loc, loc))
-    loc += 64
+    # Check size
+    gridSize = len(level[0])
+    gridPixel = 64
+    levelGrid = []
+    # Scan one gridspot | for sprite type
+    for y in range(gridSize):
+        for x in range(gridSize):
+            levelGrid.append(level[y][x])
+    # Place item and move to next one
+    print(levelGrid)
+    # Jump back once the gridmax has been reached
 
 # Creates the sprites from the provided spritesheet and stores them in individual surfaces
 ss = pygame.image.load("spritesheet.png").convert()
@@ -56,6 +62,8 @@ buttonUnclicked = spritesheet(ss, (0, 4, 4, 4), 64)
 buttonClicked = spritesheet(ss, (4, 4, 4, 4), 64)
 doorOpen = spritesheet(ss, (0, 0, 4, 4), 64)
 doorClosed = spritesheet(ss, (4, 0, 4, 4), 64)
+
+createLevel(level)
 
 isPlaying = True
 while isPlaying:
@@ -70,20 +78,6 @@ while isPlaying:
     if pressed[pygame.K_DOWN]: y += 3
     if pressed[pygame.K_LEFT]: x -= 3
     if pressed[pygame.K_RIGHT]: x += 3
-    
-    path = 0
-    for i in range(8):
-        Surface.blit(wall, (path, 0))
-        path += 64
-        if path == 512:
-            break
-    
-    path = 0
-    for i in range(8):
-        Surface.blit(wall, (path, 448))
-        path += 64
-        if path == 512:
-            break
 
     Surface.blit(player, (x, y))
 
