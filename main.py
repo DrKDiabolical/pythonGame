@@ -3,45 +3,17 @@ import os
 
 pygame.init()
 
-WIDTH = 512
-HEIGHT = 512
-Surface = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Gridrunner")
-clock = pygame.time.Clock()
+# Initial values
+WIDTH = 512 # Screen width
+HEIGHT = 512 # Screen height
+Surface = pygame.display.set_mode((WIDTH, HEIGHT)) # Create screen
+pygame.display.set_caption("Gridrunner") # Set caption
+clock = pygame.time.Clock() # Initialize clock
+
 x = WIDTH/2
 y = HEIGHT/2
 
-# Controls spritesheet importing
-class spritesheet(object):
-    def __init__(self, filename):
-        self.sheet = pygame.image.load(filename).convert()
-    def image_at(self, rectangle, colorkey = None):
-        "Loads image from x,y,x+offset,y+offset"
-        rect = pygame.Rect(rectangle)
-        image = pygame.Surface(rect.size).convert()
-        image.blit(self.sheet, (0, 0), rect)
-        if colorkey is not None:
-            if colorkey is -1:
-                colorkey = image.get_at((0,0))
-            image.set_colorkey(colorkey, pygame.RLEACCEL)
-        # Scales the image to 64x64s
-        image = pygame.transform.scale(image, (64, 64))
-        return image
-
-# def createLevel(level):
-
-ss = spritesheet('spritesheet.png')
-air = ss.image_at((0, 0, 1, 1), colorkey=(0, 0, 0))
-wall = ss.image_at((12, 0, 4, 4))
-player = ss.image_at((8, 4, 4, 4))
-enemy = ss.image_at((12, 4, 4, 4), colorkey=(0, 0, 0))
-coin = ss.image_at((8, 0, 4, 4), colorkey=(0, 0, 0))
-buttonClicked = ss.image_at((4, 4, 4, 4), colorkey=(0, 0, 0))
-buttonUnclicked = ss.image_at((0, 4, 4, 4), colorkey=(0, 0, 0))
-doorOpen = ss.image_at((0, 0, 4, 4), colorkey=(0, 0, 0))
-doorClosed = ss.image_at((4, 0, 4, 4), colorkey=(0, 0, 0))
-
-# Air = 0   Wall = 1   Player = 2   Enemy = 3
+# Empty = 0   Wall = 1   Player = 2   Enemy = 3
 # Coin = 4   Button = 5   Open Door = 6   Closed Door = 7
 
 # This list is the layout for the level (8x8 grid)
@@ -56,19 +28,62 @@ level = [
  [1, 1, 1, 1, 1, 1, 1, 1 ]
 ]
 
+# Controls spritesheet importing
+def spritesheet(sheet, rectangle, scaleTo):
+    "Loads image from x,y,x+offset,y+offset"
+    rect = pygame.Rect(rectangle)
+    image = pygame.Surface(rect.size).convert()
+    image.blit(sheet, (0, 0), rect)
+    image.set_colorkey((0, 0, 0), pygame.RLEACCEL)
+    # Scales the image to designated size
+    image = pygame.transform.scale(image, (scaleTo, scaleTo))
+    return image
+
+# Generates a level based on the level list
+def createLevel(level):
+    loc = 0
+    for y in level:
+        Surface.blit(enemy, (loc, loc))
+    loc += 64
+
+# Creates the sprites from the provided spritesheet and stores them in individual surfaces
+ss = pygame.image.load("spritesheet.png").convert()
+wall = spritesheet(ss, (12, 0, 4, 4), 64)
+player = spritesheet(ss, (8, 4, 4, 4), 64)
+enemy = spritesheet(ss, (12, 4, 4, 4), 64)
+coin = spritesheet(ss, (8, 0, 4, 4), 64)
+buttonUnclicked = spritesheet(ss, (0, 4, 4, 4), 64)
+buttonClicked = spritesheet(ss, (4, 4, 4, 4), 64)
+doorOpen = spritesheet(ss, (0, 0, 4, 4), 64)
+doorClosed = spritesheet(ss, (4, 0, 4, 4), 64)
+
 isPlaying = True
 while isPlaying:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             isPlaying = False
 
-    Surface.fill((255, 255, 255))
+    Surface.fill((0, 0, 0))
     
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_UP]: y -= 3
     if pressed[pygame.K_DOWN]: y += 3
     if pressed[pygame.K_LEFT]: x -= 3
     if pressed[pygame.K_RIGHT]: x += 3
+    
+    path = 0
+    for i in range(8):
+        Surface.blit(wall, (path, 0))
+        path += 64
+        if path == 512:
+            break
+    
+    path = 0
+    for i in range(8):
+        Surface.blit(wall, (path, 448))
+        path += 64
+        if path == 512:
+            break
 
     Surface.blit(player, (x, y))
 
