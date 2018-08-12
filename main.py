@@ -12,18 +12,30 @@ font = pygame.font.SysFont(None, 100) # Initialize font
 
 # CUSTOMIZABLE GAME OPTIONS
 
-gridSize = 16 # Choose grid size (Currently supports 8x8, 16x16 and 32x32)
+gridSize = 8 # Choose grid size (Currently supports 8x8, 16x16 and 32x32)
 
 # Use the following list below to define the level layout, the keys change between the different objects to draw on the screen
 
 # OBJECT KEYS
 # Empty = 0   Wall = 1   Player = 2   Enemy = 3
-# Coin = 4   Button = 5   Open Door = 6   Closed Door = 7
+# Coin = 4   Button = 5   Door = 6
 
 # This list is the layout for the level
-# Template for 16x16 grid
 
+# Template for 8x8 grid
 level = [
+ [1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 0, 0, 0, 0, 0, 6, 1],
+ [1, 0, 4, 0, 4, 0, 0, 1],
+ [1, 0, 1, 1, 1, 1, 1, 1],
+ [1, 0, 4, 5, 4, 0, 0, 1],
+ [1, 1, 1, 1, 1, 1, 0, 1],
+ [1, 2, 0, 0, 0, 0, 0, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1]
+]
+
+# Template for 16x16 grid
+""" level = [
  [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
  [ 1, 0, 0, 4, 0, 4, 0, 0, 4, 1, 0, 0, 0, 0, 6, 1 ],
  [ 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1 ],
@@ -40,17 +52,58 @@ level = [
  [ 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1 ],
  [ 1, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 4, 1 ],
  [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
-]
+] """
+
+# Template for 32x32 grid
+""" level = [
+    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+    [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1 ],
+    [ 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+    [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
+] """
 
 # END OF CUSTOMIZABLE GAME OPTIONS
 
-pixelRatio = 0
+# Selects player speed and sprite size based on grid size
+playerSpeed = 0
+spriteSize = 0
 if gridSize == 8:
-    pixelRatio = 64
+    playerSpeed = 8
+    spriteSize = 64
 elif gridSize == 16:
-    pixelRatio = 32
+    playerSpeed = 4
+    spriteSize = 32
 elif gridSize == 32:
-    pixelRatio = 16
+    playerSpeed = 2
+    spriteSize = 16
 
 # Controls spritesheet importing
 def spritesheet(sheet, rectangle, scaleTo):
@@ -64,30 +117,42 @@ def spritesheet(sheet, rectangle, scaleTo):
 
 # Creates the sprites from the provided spritesheet and stores them in individual surfaces
 ss = pygame.image.load("spritesheet.png").convert()
-wall = spritesheet(ss, (12, 0, 4, 4), pixelRatio)
-playerSprite = spritesheet(ss, (8, 4, 4, 4), pixelRatio)
-enemy = spritesheet(ss, (12, 4, 4, 4), pixelRatio)
-coin = spritesheet(ss, (8, 0, 4, 4), pixelRatio)
-buttonUnclicked = spritesheet(ss, (0, 4, 4, 4), pixelRatio)
-buttonClicked = spritesheet(ss, (4, 4, 4, 4), pixelRatio)
-doorOpen = spritesheet(ss, (0, 0, 4, 4), pixelRatio)
-doorClosed = spritesheet(ss, (4, 0, 4, 4), pixelRatio)
+wall = spritesheet(ss, (12, 0, 4, 4), spriteSize)
+playerSprite = spritesheet(ss, (8, 4, 4, 4), spriteSize)
+enemy = spritesheet(ss, (12, 4, 4, 4), spriteSize)
+coin = spritesheet(ss, (8, 0, 4, 4), spriteSize)
+buttonUnclicked = spritesheet(ss, (0, 4, 4, 4), spriteSize)
+buttonClicked = spritesheet(ss, (4, 4, 4, 4), spriteSize)
+doorOpen = spritesheet(ss, (0, 0, 4, 4), spriteSize)
+doorClosed = spritesheet(ss, (4, 0, 4, 4), spriteSize)
 
-# Stores data on each level object
+# Stores data on basic grid objects
 class gridElement(object):
-    def __init__(self, name, pos):
+    def __init__(self, name, sprite, pos):
         grid.append(self)
         self.name = name
-        self.rect = pygame.Rect(pos[0], pos[1], pixelRatio, pixelRatio)
-    
-    def delete(self):
-        self.rect = None
+        self.sprite = sprite
+        self.rect = pygame.Rect(pos[0], pos[1], spriteSize, spriteSize)
+
+# Stores data on interactable grid objects
+class interactElement(object):
+    def __init__(self, name, state, sprites, pos):
+            grid.append(self)
+            self.name = name
+            self.state = state
+            self.sprites = sprites
+            self.sprite = sprites[1]
+            self.rect = pygame.Rect(pos[0], pos[1], spriteSize, spriteSize)
+            if self.state == 0:
+                self.sprite = sprites[0]
+            else:
+                self.sprite = sprites[1]
 
 # Defines all player data
 class Player():
     def __init__(self, spawn):
         self.spawn = spawn # Stores original spawn location
-        self.rect = pygame.Rect(spawn[0], spawn[1], pixelRatio, pixelRatio) # Creates rect for player
+        self.rect = pygame.Rect(spawn[0], spawn[1], spriteSize, spriteSize) # Creates rect for player
         self.score = 0 # Initializes score
         self.win = False # Contains win status
 
@@ -120,9 +185,13 @@ class Player():
                 if self.rect.colliderect(i.rect):
                     self.score += 100
                     i.rect = pygame.Rect(10000, 10000, 0, 0)
-            if i.name == "Open Door":
-                if self.rect.colliderect(i.rect):
-                    self.win = True
+            if i.name == "Door":
+                if i.state == 0:
+                    if self.rect.colliderect(i.rect):
+                        self.win = True
+            if i.name == "Button":
+                if i.state == 0:
+                    i.state = 1
 
 
 
@@ -134,25 +203,24 @@ gridY = 0
 for y in level:
     for x in y:
         if x == 1:
-            gridElement("Wall", (gridX, gridY))
+            gridElement("Wall", wall, (gridX, gridY))
         elif x == 2:
             spawnPoint = (gridX, gridY)
         elif x == 3:
-            gridElement("Enemy", (gridX, gridY))
+            gridElement("Enemy", enemy, (gridX, gridY))
         elif x == 4:
-            gridElement("Coin", (gridX, gridY))
+            gridElement("Coin", coin, (gridX, gridY))
         elif x == 5:
-            gridElement("Button", (gridX, gridY))
+            interactElement("Button", 0, [buttonUnclicked, buttonClicked], (gridX, gridY))
         elif x == 6:
-            gridElement("Open Door", (gridX, gridY))
-        elif x == 7:
-            gridElement("Closed Door", (gridX, gridY))
-        gridX += pixelRatio
-    gridY += pixelRatio
+            interactElement("Door", 0, [doorOpen, doorClosed], (gridX, gridY))
+        gridX += spriteSize
+    gridY += spriteSize
     gridX = 0
 
 player = Player(spawnPoint) # Initializes player object
 win = font.render("You Win!", True, (146, 244, 66)) # Initializes win text
+buttonAmount = 0
 
 isPlaying = True # Checks if the user is playing the game
 while isPlaying: # Game loop begins
@@ -164,28 +232,27 @@ while isPlaying: # Game loop begins
 
     pressed = pygame.key.get_pressed() # Handles player input
     if pressed[pygame.K_LEFT]:
-        player.move(-4, 0)
+        player.move(-playerSpeed, 0)
     if pressed[pygame.K_RIGHT]:
-        player.move(4, 0)
+        player.move(playerSpeed, 0)
     if pressed[pygame.K_UP]:
-        player.move(0, -4)
+        player.move(0, -playerSpeed)
     if pressed[pygame.K_DOWN]:
-        player.move(0, 4)
+        player.move(0, playerSpeed)
     
     # Renders the level grid
     for i in grid:
         if i.name == "Wall":
-            Surface.blit(wall, i.rect)
+            Surface.blit(i.sprite, i.rect)
         elif i.name == "Enemy":
-            Surface.blit(enemy, i.rect)
+            Surface.blit(i.sprite, i.rect)
         elif i.name == "Coin":
-            Surface.blit(coin, i.rect)
+            Surface.blit(i.sprite, i.rect)
         elif i.name == "Button":
-            Surface.blit(buttonUnclicked, i.rect)
-        elif i.name == "Open Door":
-            Surface.blit(doorOpen, i.rect)
-        elif i.name == "Closed Door":
-            Surface.blit(doorClosed, i.rect)
+            Surface.blit(i.sprite, i.rect)
+        elif i.name == "Door":
+            Surface.blit(i.sprite, i.rect)
+            
 
     # Checks if the player has won
     if player.win == True:
